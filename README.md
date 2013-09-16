@@ -106,7 +106,7 @@ The first agrument is a `TaskFunction` array. The second argument is the number 
 Repeater repeater(tasks,2);
 ```
 
-If you don't like the hardcoded `2`, you can get the number of array elements by doing the following calculation. This, however, works only if the array was not passed as a function argument.
+If you don't like the hardcoded `2`, you can get the number of array elements by doing the following calculation. This, however, works only if the array was not passed as a function argument to your code.
 
 ```cpp
 sizeof(tasks)/sizeof(tasks[0])
