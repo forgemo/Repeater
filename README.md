@@ -126,5 +126,10 @@ void loop() {
 ```
 
 
+Disclaimer
+----------
+- Since I'm a Java Developer, writing C++ code is for me quite unintuitive. Please tell me if I did something stupid or unconventional.
+- There are some much more advanced scheduling libraries for Arduino available. This library is not going to compete with them. 
+- I want to keep it as stupid and simple as possible.
 
 
