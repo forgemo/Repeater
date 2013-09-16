@@ -1,5 +1,5 @@
 /*
-  Scheduler.h - Little task scheduling library for arduino.
+  Repeater.h - Little task scheduling library for arduino.
   Created by Mohammed El Batya, September 16, 2013.
   Released into the public domain.
 */
