@@ -30,7 +30,7 @@ Limits
 Example
 =======
 
-This is a fully working Arduino example sketch. It will be followed by an step-by-step explaination.
+This is a fully working Arduino example sketch. It will be followed by a step-by-step explaination.
 
 ```cp
 #include <Repeater.h>
