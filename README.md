@@ -74,7 +74,7 @@ First, you need to include the library.
 
 ----------
 
-Now you need a few functions, that can be scheduled. These functions must return an `unsigned long` and
+Now you need a few functions, that can be scheduled. These functions have to return an `unsigned long` and
 take no arguments. Functions that match this criteria are defined as `TaskFunction`. The return value tells the `Repeater` how long it should wait until the `TaskFunction` want's to be called again (in milliseconds).
 
 ```cpp
