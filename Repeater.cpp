@@ -26,9 +26,18 @@
   --------------------------------------------------------------------------------
 */
 
+
+//===============================================================================
+// Includes
+//===============================================================================
+
 #include <Arduino.h>
 #include "Repeater.h"
 
+
+//===============================================================================
+// Constructors / Destructor
+//===============================================================================
 
 Repeater::Repeater(TaskFunction pTasks[], int pNumberOfTasks){
 	mTasks = pTasks;
@@ -47,52 +56,82 @@ Repeater::~Repeater(){
 	delete [] mExecutionTimestamps;
 }
 
-
+//===============================================================================
+// Methods
+//===============================================================================
 
 unsigned long Repeater::tick(){
+
 	unsigned long currentTime = millis();
 
-	// create a timestamp pointer, pointing to the first array element
+	// Create a timestamp pointer, pointing to the first array element in
+	// mExecutionTimestamps.
 	unsigned long *timestamp = mExecutionTimestamps;
-	// create a task pointer, pointing to the first array element
+
+	// Create a TaskFunction pointer, pointing to the first array element in
+	// mTasks.
 	TaskFunction *task = mTasks;
 
-	unsigned long nextTickTimestamp = 0;
+	// We will determine further below, when the next call to tick() should happen.
+	// This variable will hold the final result. We initialize it with -1, which 
+	// leads to a number underflow since it's an unsigned long. It has, therefore,
+	// )for the moment) the maximum possible value an unsigned long can hold.
+	unsigned long nextTickTimestamp = -1;
 
-	for(int i=0; i<mNumberOfTasks; i++)
-	{
+	// Repeat <mNumberOfTasks> times to iterate over all elements in mTask and
+	// mExecutionTimestamps.
+	for(int i=0; i<mNumberOfTasks; i++){
 
+		// If the execution of the current task is due ...
 		if(currentTime >= *timestamp){
-			unsigned long nextDelay = (*task)();	
+			// ... execute the current task and store its return value, which is
+			// the amount of time to wait until it wants to be called again.
+			unsigned long nextDelay = (*task)();
+
+			// Update the currentTime, since the current tasks execution could
+			// have taken a considerable amount of time.	
 			currentTime = millis();
+
+			// Update the execution timestamp for the current task to it's next
+			// desired execution time.
 			*timestamp = currentTime + nextDelay;
 		}
 
-		if(nextTickTimestamp == 0){
-			nextTickTimestamp = *timestamp;
-		}else{
-			nextTickTimestamp = min(nextTickTimestamp, *timestamp);
-		}
-
-		// move task pointer to next task in the array
+		// Update nextTickTimestamp to be (after the loop finishes) the earliest 
+		// of all next-task-execution timestamp.  
+		nextTickTimestamp = min(nextTickTimestamp, *timestamp);
+		
+		// Move task pointer to next task in the array.
     	task++;
-    	// move timestamp pointer to next timestamp in the array
+    	// Move timestamp pointer to next timestamp in the array.
     	timestamp++;
 	}
 
+	// Update the currentTime again, just to be sure :)
 	currentTime = millis();
 
+	// Based on the nextTickTimestamp, we want to suggest an approximate delay to
+	// the caller of tick(), until the next call to tick() should happen.  
+	// This variable is initialized with 0, which means 'no delay at all', and 
+	// will hold the final result.
 	unsigned long suggestedDelay = 0;
 
+	// If nextTickTimestamp is in the future, calculate the difference between
+	// now and nextTickTimestamp. Store the result in suggestedDelay.
 	if(currentTime < nextTickTimestamp){
 		suggestedDelay = nextTickTimestamp - currentTime;
 	}
 
-	if(suggestedDelay > 50){
-		suggestedDelay = suggestedDelay - 50;
-	}else{
-		suggestedDelay = 0;
-	}
+	// If the suggestedDelay is longer than 10 milliseconds ...
+	if(suggestedDelay > 10){
+		// ... reduce it by 10 milliseconds to add a little buffer, ensuring to be
+		// called on time.
+		suggestedDelay = suggestedDelay - 10;
+	}else if(suggestedDelay > 1 && suggestedDelay < 10){
+		// If the suggestedDelay is from 2 to 10 milliseconds, we will always suggest
+		// a delay of 1 millisecond.
+		suggestedDelay = 1;
+	} // Otherwise, (for 0 and 1 milliseconds) the suggestedDelay wil be 0.
 
 	return suggestedDelay;
 }
