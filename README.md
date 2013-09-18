@@ -16,7 +16,7 @@ Features
 --------
 
 - Extremely simple and lightweight 
-- The `Repeater` dynamically calculates, how long you may `delay()` your main loop between function calls to maximize your energy efficency. The Repeate will never call `delay()` by itself.
+- The `Repeater` dynamically calculates, how long you may `delay()` your main loop between function calls to maximize your energy efficency. The Repeater will never call `delay()` by itself.
 
 
 Limits
