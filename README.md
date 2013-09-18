@@ -24,7 +24,7 @@ Limits
 
 - You can't dynamically add/remeove functions to/from a `Repeater` once it is created. 
 - A function call can be delayed by other scheduled functions that take to long. (Non preemptive strategy, Execution deviation)
-- In your code, you must not make any assumptions about the execution order of scheduled functions. 
+- You must not make any assumptions about the execution order of scheduled functions in your code. 
 
 
 Example
